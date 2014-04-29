@@ -27,7 +27,7 @@ define(['jquery'], function ($) {
             bgcolor: '#fff',
             appendType: 'append',
             opacity: 0.2,
-            zIndex: 999
+            zIndex: 9999
         }, config);
 
 
@@ -115,10 +115,6 @@ define(['jquery'], function ($) {
         return this;
     };
 
-    /**
-     * 外部引用
-     * @type {Function}
-     */
 
     var maskLayer;
 
@@ -129,7 +125,7 @@ define(['jquery'], function ($) {
      * @constructor
      */
 
-    return function (config) {
+   return function (config) {
         if (maskLayer) {
             maskLayer.appendBody();
         } else {

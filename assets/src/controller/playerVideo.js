@@ -32,14 +32,14 @@ define(['jquery', 'component/tools'], function($, tools){
                             } else {
                                 window.open( assignType.backUrl, '_blank');
                             }
-                        }
-
-                        if( isIos ) {
+                        } else if( isIos ) {
 
                             var baseUrl = 'http://worldcup.hotnews/?info=';
                             // http://storm.baofeng.net/?c=
                             window.open( baseUrl + assignTypeStr , '_blank');
 
+                        } else {
+                            window.open( assignType.backUrl, '_blank');
                         }
 
                     } else if ( assignType.type === 'article' ) {

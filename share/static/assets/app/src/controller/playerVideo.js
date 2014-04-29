@@ -1,9 +1,8 @@
-define(['jquery'], function($){
+define(['jquery', 'component/tools'], function($, tools){
         return function(){
                 var layoutContent = $('.layout-content'),
-                    isAndroid = (/android/gi).test(navigator.appVersion),
-                    isIos = (/iphone|ipad/gi).test(navigator.appVersion);
-
+                    isAndroid = tools.isAndroid,
+                    isIos = tools.isIos;
             layoutContent.on('tap', 'a', function(e){
                 var $this = $(this),
                     isAppInstall = false,
@@ -33,14 +32,14 @@ define(['jquery'], function($){
                             } else {
                                 window.open( assignType.backUrl, '_blank');
                             }
-                        }
-
-                        if( isIos ) {
+                        } else if( isIos ) {
 
                             var baseUrl = 'http://worldcup.hotnews/?info=';
                             // http://storm.baofeng.net/?c=
                             window.open( baseUrl + assignTypeStr , '_blank');
 
+                        } else {
+                            window.open( assignType.backUrl, '_blank');
                         }
 
                     } else if ( assignType.type === 'article' ) {
