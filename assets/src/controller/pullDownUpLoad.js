@@ -21,6 +21,15 @@ define( ['jquery',  'component/iscroll',  'component/tools'],
 
             var layoutContent = $('.layout-content')[0], isVaildDate = true;
 
+            var setPullUpLabel = function( isVaildDate ){
+                var pullUpIcon = pullUpEl.querySelector('.pullUpIcon'),
+                    pullUpLabel = pullUpEl.querySelector('.pullUpLabel');
+                if( !isVaildDate ) {
+                    pullUpIcon.style.display = 'none';
+                    pullUpLabel.innerHTML =  '亲，已经没有了哦';
+                }
+            };
+
             if( myScroll ) {
                 myScroll.refresh();
             } else {
@@ -30,21 +39,23 @@ define( ['jquery',  'component/iscroll',  'component/tools'],
                     hideScrollbar: true,
                     scrollbarClass: 'myScrollbar',
                     onRefresh: function () {
+                        isVaildDate = $(document.body).data('has-list-page');
+                        setPullUpLabel( isVaildDate );
                         if (pullDownEl.className.match('loading')) {
                             pullDownEl.className = '';
                             pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
                             pullUpEl.querySelector('.pullUpIcon').style.display = 'block';
                             pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
                             isVaildDate = true;
-                        } else if (pullUpEl.className.match('loading')) {
+                        } else if (isVaildDate && pullUpEl.className.match('loading')) {
                             pullUpEl.className = '';
-                            pullUpEl.querySelector('.pullUpIcon').style.display = isVaildDate ? 'block' :  'none';
-                            pullUpEl.querySelector('.pullUpLabel').innerHTML =
-                                isVaildDate ? '上拉加载更多...' : '亲，已经没有了哦';
+                            pullUpEl.querySelector('.pullUpIcon').style.display ='block';
+                            pullUpEl.querySelector('.pullUpLabel').innerHTML =  '上拉加载更多...';
                         }
                     },
                     onScrollMove: function () {
-
+                        isVaildDate = $(document.body).data('has-list-page');
+                        //setPullUpLabel( isVaildDate );
                         if (this.y > 5 && !pullDownEl.className.match('flip')) {
                             pullDownEl.className = 'flip';
                             pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
@@ -63,6 +74,8 @@ define( ['jquery',  'component/iscroll',  'component/tools'],
                         }
                     },
                     onScrollEnd: function () {
+                        isVaildDate = $(document.body).data('has-list-page');
+                        //setPullUpLabel( isVaildDate );
                         if (pullDownEl.className.match('flip')) {
                             pullDownEl.className = 'loading';
                             pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';
@@ -71,9 +84,8 @@ define( ['jquery',  'component/iscroll',  'component/tools'],
                             pullUpEl.className = 'loading';
                             pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';
                             if ( pullUpAction ) {
-                                isVaildDate = pullUpAction( myScroll );
+                                pullUpAction( myScroll );
                             }
-
                         }
                     }
                 });

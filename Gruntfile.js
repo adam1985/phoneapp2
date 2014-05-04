@@ -35,7 +35,7 @@ module.exports = function (grunt) {
                     "preserveLicenseComments": false,
                     "cssImportIgnore": null,
                     "optimizeCss": "standard",
-                    "name": "controller/index",
+                    "name": "index",
                     "out": "assets/dist/index.js"
                 }
             }
@@ -50,7 +50,7 @@ module.exports = function (grunt) {
                 atBegin: true
             },
             css: {
-                files: ['./assets/styles/*.css'],
+                files: ['./assets/styles/*.css', '!./assets/styles/index.min.css'],
                 tasks: ['cssmin']
             }
         }

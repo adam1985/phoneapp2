@@ -1,5 +1,5 @@
-define(['jquery', 'component/template',   'component/loading', './pullDownUpLoad', 'component/jquery.uri', './playerVideo', 'component/tools', 'conf/config'],
-    function($, template, loading, pullDownUpLoad, uri, playerVideo, tools, config){
+define(['jquery', 'component/template',   'component/loading', './pullDownUpLoad', 'component/jquery.uri',  './getFirstPageList', './playerVideo', 'component/tools', 'conf/config'],
+    function($, template, loading, pullDownUpLoad, uri, getFirstPageList, playerVideo, tools, config){
 
         return function( complete ){
 
@@ -19,58 +19,33 @@ define(['jquery', 'component/template',   'component/loading', './pullDownUpLoad
 
                     if( data ) {
                         document.title = data.title;
-                        var pageIndex = data.latestPage;
+                        var pageIndex = data.latestPage, pageIndexArg = {
+                            pageIndex : data.latestPage
+                        };
                         var templateStr = template.render('lists-title-template', {
                             title : data.title
                         });
 
                         $('#news-lists-title').html( templateStr );
 
-                        var dtd = $.ajax({
-                            url: config.base + 'data/list/' + category + '/' + data.newsSource + data.latestPage +  '.js',
-                            dataType: 'jsonp',
-                            jsonpCallback : 'newsListsCallBack',
-                            success: function( data ){
-                                mobileLoad.hide();
-                                var newsListsContainer = $('#news-lists-container');
-                                if( data ) {
-                                    data = tools.joinAssignSrc( data );
-                                    var templateStr = template.render('news-lists-template', {
-                                        list : data
-                                    });
-                                    newsListsContainer.html( templateStr );
-                                } else {
-                                    newsListsContainer.hide();
-                                }
-
-                            }
-                        });
+                        var dtd = getFirstPageList(pageIndexArg,  'data/list/' + category + '/', data, 'newsListsCallBack', 'news-lists-container', 'news-lists-template');
 
                         $.when( dtd ).done( function(){
+                            mobileLoad.hide();
+                            pageIndex = pageIndexArg.pageIndex;
                             playerVideo();
                             complete && complete();
 
                             pullDownUpLoad(function(myScroll){
-                                $.ajax({
-                                    url: config.base + 'data/list/' + category + '/' + data.newsSource + data.latestPage +  '.js',
-                                    dataType: 'jsonp',
-                                    jsonpCallback : 'newsListsCallBack',
-                                    success: function( res ){
-                                        if( res.length >>> 0 ) {
-                                            pageIndex = data.latestPage;
-                                            res = tools.joinAssignSrc( res );
-                                            var newsListsContainer = $('#news-lists-container');
-                                            var templateStr = template.render('news-lists-template', {
-                                                list : res
-                                            });
-                                            newsListsContainer.html( templateStr );
-                                        }
-
-                                        myScroll.refresh();
-                                    }
+                                pageIndexArg.pageIndex = data.latestPage;
+                                var refDtd = getFirstPageList(pageIndexArg,  'data/list/' + category + '/', data, 'newsListsCallBack', 'news-lists-container', 'news-lists-template');
+                                refDtd.done( function(){
+                                    pageIndex = pageIndexArg.pageIndex;
+                                    myScroll.refresh();
                                 });
+
                             }, function(myScroll){
-                                --pageIndex;
+
                                 if( pageIndex > 0 ) {
                                     $.ajax({
                                         url: config.base + 'data/list/' + category + '/' + data.newsSource + pageIndex + '.js',
@@ -86,12 +61,20 @@ define(['jquery', 'component/template',   'component/loading', './pullDownUpLoad
                                                 newsListsContainer.append( templateStr );
                                             }
 
+                                            --pageIndex;
+
+                                            if( pageIndex < 1 ) {
+                                                $(document.body).data('has-list-page', false);
+                                            }
+
+
                                             myScroll.refresh();
                                         }
                                     });
-                                    return pageIndex > 1;
+                                } else {
+                                    $(document.body).data('has-list-page', false);
                                 }
-                                return false;
+
                             });
 
                         });

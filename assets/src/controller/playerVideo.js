@@ -27,10 +27,10 @@ define(['jquery', 'component/tools'], function($, tools){
                                 try{
                                     window.worldcup.onVideoDetected( assignType.mainUrl );
                                 }catch(e){
-                                    window.open( assignType.backUrl, '_blank');
+                                    window.worldcup.onVideoDetected( assignType.backUrl );
                                 }
                             } else {
-                                window.open( assignType.backUrl, '_blank');
+                                window.worldcup.onVideoDetected( assignType.backUrl );
                             }
                         } else if( isIos ) {
 

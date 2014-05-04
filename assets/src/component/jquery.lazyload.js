@@ -83,13 +83,16 @@ define(['jquery'], function($){
 
             this.each(function () {
                 var self = this;
-                var $self = $(self);
+                var $self = $(self),
+                    offset = $self.offset();
 
                 self.loaded = false;
 
-                if( $self.attr("src") ) {
-                    $self.attr('data-original', $self.attr("src"));
-                    $self.removeAttr('src');
+                if( offset.top > settings.threshold + $(window).height()) {
+                    if( $self.attr("src") ) {
+                        $self.attr('data-original', $self.attr("src"));
+                        $self.removeAttr('src');
+                    }
                 }
 
                 /* If no src attribute given use data:uri. */

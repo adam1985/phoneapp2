@@ -1,6 +1,6 @@
 define(['jquery',  'component/template', 'component/jquery.swiper', 'component/loading',
-    'component/superMarquee', './pullDownUpLoad', './playerVideo', 'component/tools', 'conf/config'],
-    function($, template, Swiper, loading, superMarquee, pullDownUpLoad, playerVideo, tools, config){
+    'component/superMarquee', './pullDownUpLoad', './getFirstPageList', './playerVideo', 'component/tools', 'conf/config'],
+    function($, template, Swiper, loading, superMarquee, pullDownUpLoad, getFirstPageList, playerVideo, tools, config){
 
         return function( complete ){
             var mobileLoad = loading();
@@ -14,7 +14,9 @@ define(['jquery',  'component/template', 'component/jquery.swiper', 'component/l
                 },
                 success: function( data ){
                     if( data ) {
-                        var pageIndex = data.latestPage;
+                        var pageIndex = data.latestPage, pageIndexArg = {
+                            pageIndex : data.latestPage
+                        };
                         var bannerDtd = $.ajax({
                                 url: config.base + 'data/index/' + data.bannerSource,
                                 dataType: 'jsonp',
@@ -53,27 +55,10 @@ define(['jquery',  'component/template', 'component/jquery.swiper', 'component/l
                                 }
                             }),
 
-                            newsDtd = $.ajax({
-                                url: config.base + 'data/index/' + data.newsSource + data.latestPage + '.js',
-                                dataType: 'jsonp',
-                                jsonpCallback : 'newsListCallBack',
-                                success: function( data ){
-                                    var newsListContainer = $('#news-list-container');
-                                    if( data.length >>> 0) {
-                                        data = tools.joinAssignSrc( data );
-                                        var templateStr = template.render('hot-news-template', {
-                                            list : data
-                                        });
-                                        newsListContainer.html( templateStr );
-                                    } else {
-                                        newsListContainer.hide();
-                                    }
-                                }
-                            });
-
-
+                            newsDtd = getFirstPageList(pageIndexArg, 'data/index/', data, 'newsListCallBack', 'news-list-container', 'hot-news-template');
 
                         $.when(bannerDtd, focusDtd, newsDtd).done(function(){
+                            pageIndex = pageIndexArg.pageIndex;
 
                             mobileLoad.hide();
 
@@ -108,59 +93,40 @@ define(['jquery',  'component/template', 'component/jquery.swiper', 'component/l
                                     layoutBannerBox.slideUp('slow');
                                 });
 
+                                // 品牌露出外跳浏览器
+                                layoutBannerBox.on('tap', 'li', function(e){
+                                    e.preventDefault();
+                                    var src = $(this).find('a').attr('href');
+
+                                    if( tools.isAndroid ) {
+                                        try{
+                                            window.worldcup.onVideoDetected( src );
+                                        }catch(e){}
+
+                                    } else if( tools.isIos ) {
+
+                                        var data = {
+                                            "type":"web",
+                                            "message":"0",
+                                            "mainUrl":src,
+                                            "backUrl":"0"
+                                        };
+
+                                        var baseUrl = 'http://worldcup.hotnews/?info=';
+
+                                        if( JSON ) {
+                                            window.open( baseUrl + JSON.stringify(data) , '_blank');
+                                        }
+
+
+                                    } else {
+                                        window.open( src , '_blank');
+                                    }
+                                });
 
 
                                 return dtd.promise(); // 返回promise对象
                             };
-
-
-
-
-                            var focusPictureButtons = $('#focus-picture-buttons').find('a'),
-                                foucsPicTureTitles = $('#focus-picture-titles').find('a');
-
-                            // 设置焦点图播放
-                            /*TouchSlider('focus-picture-box', {
-                                auto: true,
-                                speed: 300,
-                                timeout: 5000,
-                                before: function (index) {
-                                    focusPictureButtons.removeClass('on').eq(index).addClass('on');
-                                    foucsPicTureTitles.find('a').removeClass('on').eq(index).addClass('on');
-                                }
-                            });*/
-
-                            $('.swiper-container').swiper({
-                                mode:'horizontal',
-                                loop: true,
-                                autoplay: 5000,
-                                onSlideChangeStart : function( swiper) {
-                                    var length = swiper.slides.length - 2,
-                                        activeIndex = swiper.activeIndex - 2,
-                                        nextIndex = activeIndex + 1;
-
-                                    if( nextIndex > length - 1 ) {
-                                        nextIndex = 0;
-                                    }
-
-                                    focusPictureButtons.removeClass('on').eq( nextIndex ).addClass('on');
-                                    foucsPicTureTitles.removeClass('on').eq( nextIndex ).addClass('on');
-
-
-                                }
-                            });
-
-                            /*$('.focus-picture-box').touchSlider({
-                                flexible : true,
-                                speed : 200,
-                                paging : focusPictureButtons,
-                                listSelector : '.focus-picture-list',
-                                counter : function (e) {
-                                    focusPictureButtons.removeClass('on').eq( e.current - 1 ).addClass('on');
-                                    foucsPicTureTitles.removeClass('on').eq( e.current - 1 ).addClass('on');
-                                }
-                            });*/
-
 
                             playerVideo();
 
@@ -171,28 +137,39 @@ define(['jquery',  'component/template', 'component/jquery.swiper', 'component/l
                                     firstFocusImgs = $('#focus-picture-box').find('img'),
                                     picWidth = 640, deviceWidth = document.documentElement.clientWidth,
                                     picHeight = ( deviceWidth / picWidth ) * 328;
-                                    //    focusPictrue.height( picHeight );
-                                var myScroll = pullDownUpLoad(function(myScroll){
-                                    $.ajax({
-                                        url: config.base + 'data/index/' + data.newsSource + data.latestPage + '.js',
-                                        dataType: 'jsonp',
-                                        jsonpCallback : 'newsListCallBack',
-                                        success: function( res ){
-                                            pageIndex = data.latestPage;
-                                            var newsListContainer = $('#news-list-container');
-                                            if( res.length >>> 0) {
-                                                res = tools.joinAssignSrc( res );
-                                                var templateStr = template.render('hot-news-template', {
-                                                    list : res
-                                                });
-                                                newsListContainer.html( templateStr );
-                                            }
+                                    //focusPictrue.height( picHeight );
 
-                                            myScroll.refresh();
+                                var focusPictureButtons = $('#focus-picture-buttons').find('a'),
+                                    foucsPicTureTitles = $('#focus-picture-titles').find('a');
+
+                                $('.swiper-container').swiper({
+                                    mode:'horizontal',
+                                    loop: true,
+                                    autoplay: 5000,
+                                    onSlideChangeStart : function( swiper) {
+                                        var length = swiper.slides.length - 2,
+                                            activeIndex = swiper.activeIndex - 2,
+                                            nextIndex = activeIndex + 1;
+
+                                        if( nextIndex > length - 1 ) {
+                                            nextIndex = 0;
                                         }
+
+                                        focusPictureButtons.removeClass('on').eq( nextIndex ).addClass('on');
+                                        foucsPicTureTitles.removeClass('on').eq( nextIndex ).addClass('on');
+                                    }
+                                });
+
+                                var myScroll = pullDownUpLoad(function(myScroll){
+                                    pageIndexArg.pageIndex = data.latestPage;
+                                    var refDtd = getFirstPageList(pageIndexArg, 'data/index/', data, 'newsListCallBack', 'news-list-container', 'hot-news-template');
+
+                                    refDtd.done( function(){
+                                        pageIndex = pageIndexArg.pageIndex;
+                                        myScroll.refresh();
                                     });
+
                                 }, function(myScroll){
-                                    --pageIndex;
                                     if( pageIndex > 0 ) {
                                         $.ajax({
                                             url: config.base + 'data/index/' + data.newsSource + pageIndex + '.js',
@@ -208,13 +185,22 @@ define(['jquery',  'component/template', 'component/jquery.swiper', 'component/l
                                                     newsListContainer.append( templateStr );
                                                 }
 
+                                                --pageIndex;
+
+                                                if( pageIndex < 1 ) {
+                                                    $(document.body).data('has-list-page', false);
+                                                }
+
                                                 myScroll.refresh();
                                             }
                                         });
-                                        return pageIndex > 1 ;
+                                    } else {
+                                        $(document.body).data('has-list-page', false);
                                     }
-                                    return false;
+
                                 });
+
+                                myScroll.refresh();
 
 
                                 firstFocusImgs.on('load', function() {
