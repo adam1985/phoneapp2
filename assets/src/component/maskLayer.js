@@ -27,7 +27,7 @@ define(['jquery'], function ($) {
             bgcolor: '#fff',
             appendType: 'append',
             opacity: 0.2,
-            zIndex: 9999
+            zIndex: 9998
         }, config);
 
 

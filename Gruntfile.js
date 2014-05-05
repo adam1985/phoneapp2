@@ -50,7 +50,10 @@ module.exports = function (grunt) {
                 atBegin: true
             },
             css: {
-                files: ['./assets/styles/*.css', '!./assets/styles/index.min.css'],
+                files: [
+                    './assets/styles/swiper.css',
+                    './assets/styles/scrollbar.css',
+                    './assets/styles/index.css'],
                 tasks: ['cssmin']
             }
         }

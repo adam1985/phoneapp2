@@ -21,7 +21,7 @@ img{ vertical-align: middle;}
 .layout-header, .layout-content, .layout-footer{position:absolute;left:0; width:100%;}
 
 /* 页面头部　*/
-.layout-header{ height: 44px; line-height: 44px; background: #18aa78; top:0; font-family: "宋体", Arial, Helvetica, sans-serif;}
+.layout-header{ height: 44px; line-height: 44px; background: #18aa78; top:0; font-family: "宋体", Arial, Helvetica, sans-serif;z-index:5;}
 .layout-header-box{position: relative; height: 100%;}
 .layout-header-box h1{ margin: 0 0 0 42px; color: #fff; text-shadow: none; font-size: 18px; font-weight: normal; display: none;}
 .layout-home-icon,.layout-goback-icon, .layout-goback-index{position: absolute; left: 0; cursor: pointer;}
@@ -59,7 +59,7 @@ img{ vertical-align: middle;}
 .focus-picture-buttons a.on{background: #fff;}
 
 /* 页面内容区 */
-.layout-content{ padding: 0; overflow: hidden; top:44px; bottom: 0; }
+.layout-content{ padding: 0; overflow: hidden; top:44px; bottom: 0; z-index:10;}
 .layout-item-content{ display: none;}
 .layout-content .active { display: block;}
 .news-list-box{ border-bottom: 1px solid #cbcbcb; padding: 8px 8px 0 8px;}
@@ -85,7 +85,7 @@ img{ vertical-align: middle;}
 .common-news-list{margin-top: 0;}
 
 /* 底部导航栏 */
-.layout-footer{ bottom: 0; height: 0;}
+.layout-footer{ bottom: 0; height: 0;z-index:200;}
 
 
 /* 页面详细页 */
@@ -96,7 +96,7 @@ img{ vertical-align: middle;}
 
 
 /* 问答页面 */
-.qa-content, .disclaimer-content, .generalize-content{ top: 0; height: 100% !important;font-size: 15px; position: static;}
+.qa-content, .disclaimer-content, .generalize-content, .layout-chat-room{ top: 0; height: 100% !important;font-size: 15px; position: static;}
 .qa-title{padding:0 10px;  font-weight: bold; position: relative; cursor: pointer;  }
 .qa-title a{
     display: block;
@@ -198,3 +198,60 @@ border-radius:30px; text-align: center; text-shadow: none; font-size: 18px; font
     from { -webkit-transform:rotate(0deg) translateZ(0); }
     to { -webkit-transform:rotate(360deg) translateZ(0); }
 }
+
+/* 聊天室 */
+.chat-room-page{
+    background-color: #f4f4f4;
+}
+
+.layout-chat-room{
+    position: absolute;
+    height: auto !important;
+    left : inherit !important;
+    top:0;
+    bottom: 50px;
+}
+.chat-room-tip p{
+    color: #b1b1b1;
+    font-size: 16px;
+}
+.chat-room-wrap{
+    padding: 0 12px 30px 12px;
+}
+.chat-item{
+    padding-top: 12px;
+}
+.create-time{color: #b1b1b1;}
+.chat-content p{
+    font-size: 16px;
+    color: #787878;
+    margin: 5px 0;
+}
+.my-chat-item span{ color: #2da67b;}
+.post-chat-message{ height: 50px; line-height:50px;width: 100%; box-sizing: border-box;background-color: #f5f5f5; vertical-align: middle;
+}
+.post-chat-message a,.post-chat-message input{display: inline-block; }
+.select-face {
+    text-indent: -9999em; margin:0 5px 0 10px;
+    width: 30px; background: url("../images/face.png") no-repeat center center; background-size: 100% auto;
+}
+.input-chat-msg{ width: 60%; border: 2px solid #31cd97; height: 28px; line-height: 28px; border-radius: 5px; outline: none; box-sizing:content-box;;
+
+}
+.post-chat-msg{ width: 50px; height: 30px; line-height:30px;border: 2px solid #31cd97;border-radius: 5px; text-align: center;box-sizing:content-box; color: #000;}
+.post-chat-msg:hover{ color: #666;}
+
+.chat-alert-box{ position: fixed; width: 80%; left:50%; top: 50%;  margin: 0 0 0 -40%; background: #fff;
+padding: 30px 20px; z-index: 9999; box-sizing: border-box;
+    -moz-box-shadow:0 3px 16px #333333;
+    -webkit-box-shadow:0 3px 16px #333333;
+    box-shadow:0 3px 16px #333333;
+    border-radius: 5px;
+    text-align: center;
+}
+.chat-alert-msg p{ margin: 0 0 5px; font-size: 16px; line-height: 1.5em; text-indent: 2em;text-align: left;}
+
+.chat-alert-btn a{ display: block; width: 50%; background: #18aa79; height: 40px; line-height: 40px; color: #fff; margin: 30px auto 0;}
+.chat-alert-btn a:hover{background: #1ec18a;}
+
+.qqface{ width: 100%; position: fixed; z-index: 99; left:0; bottom: 50px;background: #fff; padding: 5px;}
