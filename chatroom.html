@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0, user-scalable=0;">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>百万世界杯聊天室</title>
-    <link rel="stylesheet" href="assets/styles/index.min.css"/>
+    <title></title>
+    <link rel="stylesheet" href="http://fjc1.pop.baofeng.net/popv5/static/phoneapp/assets/styles/index.min.css"/>
 </head>
 <body>
 <div class="wrapper common-page chat-room-page" data-role="page" id="chat-room-page">
@@ -14,136 +14,16 @@
     <div role="main" class="layout-content layout-chat-room">
         <div id="scroller">
             <div class="chat-room-wrap">
-                <div class="chat-room-tip">
-                    <p>
-                        您已成功进入聊天室，现在开始聊天吧！
-                    </p>
+                <div class="chat-room-tip" id="chat-room-tip">
+
                 </div>
-                <div class="chat-wrap">
-                    <div class="chat-item">
-                        <div class="user-title">
-                            <span>用户***</span>
-                            <span class="user-phone-number">****8451</span>
-                            <span class="create-time">10:50:38</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                这次世界杯谁会赢？
-                            </p>
-                        </div>
-                    </div>
-                    <div class="chat-item my-chat-item">
-                        <div class="user-title">
-                            <span>我：</span>
-                            <span>10:50:33</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                巴西吧...  ？
-                            </p>
-                        </div>
-                    </div>
+                <div class="chat-wrap" id="chat-wrap">
 
-                    <div class="chat-item">
-                        <div class="user-title">
-                            <span>用户***</span>
-                            <span class="user-phone-number">****8451</span>
-                            <span class="create-time">10:50:38</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                这次世界杯谁会赢？
-                            </p>
-                        </div>
-                    </div>
-                    <div class="chat-item my-chat-item">
-                        <div class="user-title">
-                            <span>我：</span>
-                            <span>10:50:33</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                巴西吧...  ？
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="chat-item">
-                        <div class="user-title">
-                            <span>用户***</span>
-                            <span class="user-phone-number">****8451</span>
-                            <span class="create-time">10:50:38</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                这次世界杯谁会赢？
-                            </p>
-                        </div>
-                    </div>
-                    <div class="chat-item my-chat-item">
-                        <div class="user-title">
-                            <span>我：</span>
-                            <span>10:50:33</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                巴西吧...  ？
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="chat-item">
-                        <div class="user-title">
-                            <span>用户***</span>
-                            <span class="user-phone-number">****8451</span>
-                            <span class="create-time">10:50:38</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                这次世界杯谁会赢？
-                            </p>
-                        </div>
-                    </div>
-                    <div class="chat-item my-chat-item">
-                        <div class="user-title">
-                            <span>我：</span>
-                            <span>10:50:33</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                巴西吧...  ？
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="chat-item">
-                        <div class="user-title">
-                            <span>用户***</span>
-                            <span class="user-phone-number">****8451</span>
-                            <span class="create-time">10:50:38</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                这次世界杯谁会赢？
-                            </p>
-                        </div>
-                    </div>
-                    <div class="chat-item my-chat-item">
-                        <div class="user-title">
-                            <span>我：</span>
-                            <span>10:50:33</span>
-                        </div>
-                        <div class="chat-content">
-                            <p>
-                                巴西吧...  ？
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="layout-footer post-chat-message">
+    <div class="layout-footer post-chat-message" id="post-chat-message">
         <a class="select-face" id="select-face" href="javascript:void(null)" title="选择表情">选择表情</a>
         <input class="input-chat-msg" id="input-chat-msg" placeholder="" value="" />
         <a class="post-chat-msg" href="javascript:void(null)" title="发送">发送</a>
@@ -156,12 +36,10 @@
     <div class="hide chat-alert-box" id="chat-alert-box">
         <div class="chat-alert-msg">
             <p>
-                每次系统会随机抽取网友与您对话，
-                不公开任何您的个人信息，您可以在这里做到真正的
-                畅所欲言！
+                {{= alertContent }}
             </p>
             <span>
-                确定要进入聊天室么？
+                {{= alertMsg }}
             </span>
         </div>
         <div class="chat-alert-btn">
@@ -169,6 +47,6 @@
         </div>
     </div>
 </script>
-<script src="assets/require.min.js" data-main="assets/src/index"></script>
+<script src="http://fjc1.pop.baofeng.net/popv5/static/phoneapp/assets/require.min.js" data-main="assets/dist/index"></script>
 </body>
 </html>

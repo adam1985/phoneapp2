@@ -1,22 +1,36 @@
-define(['jquery',  'component/template', 'component/maskLayer'],
-    function ($, template, MaskLayer) {
+define(['jquery',  'component/template', 'template/chatTemplate', 'model/chat-conf', 'component/maskLayer'],
+    function ($, template, chatTemplate, chatConf, MaskLayer) {
         return function () {
-            var maskLayer = MaskLayer({
-                opacity: 0.5
-            });
 
-            maskLayer.show( function(){
-                var templateStr = template.render('chat-alert-template'), chatAlert = $(templateStr);
-                $(document.body).append( chatAlert );
-                chatAlert.css('margin-top', -chatAlert.outerHeight()/2).fadeIn();
+            // 设置页面标题　
+            document.title = chatConf.title;
 
-                $('#chat-alert-btn').on('tap', function(e){
-                    e.preventDefault();
-                    chatAlert.fadeOut();
-                    maskLayer.hide();
+            // 聊天室欢迎语
+
+            var tipTemplate = template.compile(chatTemplate.tipTemplate);
+            $('#chat-room-tip').html( tipTemplate( chatConf ) );
+
+            // 提示框
+            (function(){
+                var maskLayer = MaskLayer({
+                    opacity: 0.5
                 });
-            });
 
+                maskLayer.show( function(){
+                    var templateStr = template.render('chat-alert-template', chatConf), chatAlert = $(templateStr);
+                    $(document.body).append( chatAlert );
+                    chatAlert.css('margin-top', -chatAlert.outerHeight()/2).fadeIn();
+
+                    $('#chat-alert-btn').on('tap', function(e){
+                        e.preventDefault();
+                        chatAlert.fadeOut();
+                        maskLayer.hide();
+                    });
+                });
+            }());
+
+
+            // 聊天表情
             (function(){
                 var qqface = $('#qqface'), faceNumbers = 75, faces = '';
                 for(var i = 0; i < faceNumbers; i++ ) {
@@ -50,7 +64,6 @@ define(['jquery',  'component/template', 'component/maskLayer'],
                 });
 
             }());
-
 
         };
     });
